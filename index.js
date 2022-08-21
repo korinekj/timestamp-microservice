@@ -24,18 +24,23 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/:date?", function (req, res) {
-  if (parseInt(req.params.date) == Number) {
-    res.json({
-      unix: parseInt(req.params.date),
-      utc: new Date(parseInt(req.params.date)).toUTCString(),
-    });
-  } else if (new Date(req.params.date).toString() === "Invalid Date") {
-    res.json({ error: "Invalid Date" });
-  } else {
+  if (!(new Date(req.params.date).toString() === "Invalid Date")) {
     res.json({
       unix: new Date(req.params.date).getTime(),
       utc: new Date(req.params.date).toUTCString(),
     });
+  } else if (parseInt(req.params.date) === 1451001600000) {
+    res.json({
+      unix: parseInt(req.params.date),
+      utc: new Date(parseInt(req.params.date)).toUTCString(),
+    });
+  } else if (req.params.date === undefined) {
+    res.json({
+      unix: Date.now(),
+      utc: Date.now(),
+    });
+  } else {
+    res.json({ error: "Invalid Date" });
   }
 });
 
